@@ -1,6 +1,7 @@
 package pomodoro;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -48,6 +49,10 @@ public class PomodoroFrame extends JFrame{
         // session input
         JSpinner sessionInput = new JSpinner();
         sessionInput.setPreferredSize(new Dimension(125, 125));
+        JTextField editor = ((JSpinner.DefaultEditor) sessionInput.getEditor()).getTextField();
+        editor.setForeground(new Color(246, 174, 45)); // Change text color
+        editor.setBackground(new Color(11, 79, 108));
+        editor.setFont(new Font("Arial", Font.PLAIN, 60));
         JLabel sessionLabel = new JLabel("Sessions:");
         sessionLabel.setForeground(new Color(1, 186, 239));
         sessionLabel.setFont(new Font("Arial", Font.BOLD, 20));
