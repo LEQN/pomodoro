@@ -1,55 +1,61 @@
 package pomodoro;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.*;
 
-public class PomodoroFrame extends JFrame{
-    private JTextField pomodoroTime;
-    private JTextField restTime;
-    private int sessions;
+public class PomodoroFrame{
+    private JFrame frame = new JFrame();
+    private JSpinner spinner; //sessions spinner
+    private JTextField pomodoroTimeInput;//time input for pomo and rest
+    private int pomodoroTime = 0;//pomo  time in seconds
+    private int restTime = 0;//rest time in seconds
+    private int sessions = 0;
+
     private RoundedButton startButton;
     private GridBagConstraints gbc = new GridBagConstraints();
 
     public PomodoroFrame(){
-        this.setTitle("Pomo");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(900, 700);
-        this.setLocationRelativeTo(null);
-        this.setResizable(false);
+        frame.setTitle("Pomo");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(900, 700);
+        frame.setLocationRelativeTo(null);
+        frame.setResizable(false);
 
         //frame icon image
 
 //        background color
-        this.getContentPane().setBackground(new Color(11, 79, 108));
+        frame.getContentPane().setBackground(new Color(11, 79, 108));
         // add start panel
-        this.add(initialPanel());
+        frame.add(initialPanel());
+//        this.add(countDownDisplay());
+        frame.setVisible(true);
     }
 
     private JComponent initialPanel(){
         JComponent startPanel = new JPanel();
         startPanel.setBackground(new Color(11, 79, 108));
-//        startPanel.setLayout(new BorderLayout());
         startPanel.setLayout(new GridBagLayout());
         gbc.insets = new Insets(35, 5, 35, 5);
         // time input
-        pomodoroTime = new JTextField("00:00");
-        pomodoroTime.setFont(new Font("Arial", Font.BOLD, 170));
-        pomodoroTime.setForeground(new Color(1, 186, 239));
-        pomodoroTime.setOpaque(false);
-        pomodoroTime.setBorder(BorderFactory.createEmptyBorder());
+        pomodoroTimeInput = new JTextField();
+        pomodoroTimeInput.setDocument(new JTextFieldLimit(5));
+        pomodoroTimeInput.setText("00:00");
+        pomodoroTimeInput.setFont(new Font("Arial", Font.BOLD, 170));
+        pomodoroTimeInput.setForeground(new Color(1, 186, 239));
+        pomodoroTimeInput.setOpaque(false);
+        pomodoroTimeInput.setBorder(BorderFactory.createEmptyBorder());
         //gridbag positioning
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 3;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        startPanel.add(pomodoroTime, gbc);
+        startPanel.add(pomodoroTimeInput, gbc);
 
         // session input
-        JSpinner sessionInput = new JSpinner();
-        sessionInput.setPreferredSize(new Dimension(125, 125));
-        JTextField editor = ((JSpinner.DefaultEditor) sessionInput.getEditor()).getTextField();
+        SpinnerModel spinnerModel = new SpinnerNumberModel(1, 1, 10, 1);
+        spinner = new JSpinner(spinnerModel);
+        spinner.setPreferredSize(new Dimension(125, 125));
+        JTextField editor = ((JSpinner.DefaultEditor) spinner.getEditor()).getTextField();
         editor.setForeground(new Color(246, 174, 45)); // Change text color
         editor.setBackground(new Color(11, 79, 108));
         editor.setFont(new Font("Arial", Font.PLAIN, 60));
@@ -61,7 +67,7 @@ public class PomodoroFrame extends JFrame{
         gbc.gridy = 0;
         gbc.ipady = 0;
         gbc.fill = GridBagConstraints.NONE;
-        startPanel.add(sessionInput, gbc);
+        startPanel.add(spinner, gbc);
         //label
 //        gbc.gridx = 3;
         gbc.ipady = 0;
@@ -76,6 +82,7 @@ public class PomodoroFrame extends JFrame{
         pomoButton.setForeground(Color.white);
         pomoButton.setBackground(new Color(246, 174, 45));
         pomoButton.setFocusable(false);
+        pomoButton.addActionListener(e -> setPomodoroTime());
         //layout positioning
         gbc.gridx = 1;
         gbc.gridy = 1;
@@ -90,6 +97,7 @@ public class PomodoroFrame extends JFrame{
         restButton.setForeground(Color.white);
         restButton.setBackground(new Color(246, 174, 45));
         restButton.setFocusable(false);
+        restButton.addActionListener(e -> setRestTime());
         //gridbag layout
         gbc.gridx = 2;
         gbc.fill = GridBagConstraints.NONE;
@@ -102,6 +110,7 @@ public class PomodoroFrame extends JFrame{
         startButton.setForeground(Color.white);
         startButton.setBackground(new Color(172, 57, 49));
         startButton.setFocusable(false);
+        startButton.addActionListener(e -> startTimer());
         //gridbag layout positioning
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -110,4 +119,75 @@ public class PomodoroFrame extends JFrame{
         startPanel.add(startButton, gbc);
         return startPanel;
     }
+
+    private JComponent countDownDisplay(){
+        JComponent countPanel = new JPanel();
+        countPanel.setBackground(new Color(11, 79, 108));
+        countPanel.setLayout(new GridBagLayout());
+        //countdown display
+
+        //continue button
+        JButton continueButton = new JButton("Continue");
+        countPanel.add(continueButton);
+        //pause button
+        JButton pauseButton = new JButton("Pause");
+        countPanel.add(pauseButton);
+        //quit button
+        JButton quitButton = new JButton("Quit");
+        countPanel.add(quitButton);
+
+        return countPanel;
+    }
+
+    /**
+     * Takes the pomodoroTime field and gets the string to split into minutes and seconds.
+     * @return array with minutes and seconds
+     */
+    private void setPomodoroTime(){
+        //resut current pomo time value
+        pomodoroTime = 0;
+        try {
+            //split string and convert to total time in seconds
+            String[] inputs = pomodoroTimeInput.getText().split(":");
+            if(inputs.length < 2){
+                throw new IllegalArgumentException();
+            }
+            //minutes to total pomo time
+            pomodoroTime += Integer.parseInt(inputs[0]) * 60;
+            //add seconds input
+            pomodoroTime += Integer.parseInt(inputs[1]);
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(frame, "Invalid time format. Must use ':' \n e.g., 00:00", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void setRestTime(){
+        // reset current rest value to 0
+        restTime = 0;
+        try {
+            //split string and convert to total time in seconds
+            String[] input = pomodoroTimeInput.getText().split(":");
+            if (input.length < 2) {
+                throw new IllegalArgumentException();
+            }
+            //minutes to total rest time
+            restTime += Integer.parseInt(input[0]) * 60;
+            // add seconds to rest time
+            restTime += Integer.parseInt(input[1]);
+            System.out.println(restTime);
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(frame, "Invalid time format. Must use ':' \n e.g., 00:00", "Error", JOptionPane.ERROR_MESSAGE);
+
+        }
+    }
+
+    private void setSessions(){
+                sessions = (int) spinner.getValue();;
+    }
+
+    private void startTimer(){
+        setSessions();
+        //PomodoroTimer countdown = new PomodoroTimer(pomodoroTime, restTime, sessions);
+    }
+
 }
