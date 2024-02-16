@@ -10,7 +10,7 @@ public class PomodoroFrame{
     private int pomodoroTime = 0;//pomo  time in seconds
     private int restTime = 0;//rest time in seconds
     private int sessions = 0;
-
+    public JLabel countdownLabel;
     private RoundedButton startButton;
     private GridBagConstraints gbc = new GridBagConstraints();
 
@@ -27,7 +27,7 @@ public class PomodoroFrame{
         frame.getContentPane().setBackground(new Color(11, 79, 108));
         // add start panel
         frame.add(initialPanel());
-//        this.add(countDownDisplay());
+
         frame.setVisible(true);
     }
 
@@ -125,15 +125,34 @@ public class PomodoroFrame{
         countPanel.setBackground(new Color(11, 79, 108));
         countPanel.setLayout(new GridBagLayout());
         //countdown display
-
+        countdownLabel = new JLabel("00:00");
+        countdownLabel.setFont(new Font("Arial", Font.BOLD, 170));
+        countdownLabel.setForeground(new Color(1, 186, 239));
+        countdownLabel.setOpaque(false);
+        countPanel.add(countdownLabel);
         //continue button
-        JButton continueButton = new JButton("Continue");
+        RoundedButton continueButton = new RoundedButton("Continue");
+        continueButton.setPreferredSize(new Dimension(200, 50));
+        continueButton.setFont(new Font("Arial", Font.BOLD, 20));
+        continueButton.setForeground(Color.white);
+        continueButton.setBackground(new Color(246, 174, 45));
+        continueButton.setFocusable(false);
         countPanel.add(continueButton);
         //pause button
-        JButton pauseButton = new JButton("Pause");
+        RoundedButton pauseButton = new RoundedButton("Pause");
+        pauseButton.setPreferredSize(new Dimension(200, 50));
+        pauseButton.setFont(new Font("Arial", Font.BOLD, 20));
+        pauseButton.setBackground(new Color(246, 174, 45));
+        pauseButton.setForeground(Color.white);
+        pauseButton.setFocusable(false);
         countPanel.add(pauseButton);
         //quit button
-        JButton quitButton = new JButton("Quit");
+        RoundedButton quitButton = new RoundedButton("Quit");
+        quitButton.setPreferredSize(new Dimension(200, 50));
+        quitButton.setFont(new Font("Arial", Font.BOLD, 20));
+        quitButton.setBackground(new Color(172, 57, 49));
+        quitButton.setForeground(Color.white);
+        quitButton.setFocusable(false);
         countPanel.add(quitButton);
 
         return countPanel;
@@ -187,7 +206,22 @@ public class PomodoroFrame{
 
     private void startTimer(){
         setSessions();
-        //PomodoroTimer countdown = new PomodoroTimer(pomodoroTime, restTime, sessions);
+        //check valid pomo time been set ie > 0 and rest time set if sessions > 1
+        if(pomodoroTime > 0){
+            if (sessions > 1 && restTime == 0){
+                JOptionPane.showMessageDialog(frame, "For multiple sessions you must have a rest period set.", "Error", JOptionPane.ERROR_MESSAGE);
+            }else{
+                //swap initial input panel with the countdown display panel
+                frame.setContentPane(countDownDisplay());
+                frame.revalidate();
+                frame.repaint();
+                //start the countdown
+                PomodoroTimer countdown = new PomodoroTimer(pomodoroTime, restTime, sessions);//make this a field
+                countdown.test();
+            }
+        }else{
+            JOptionPane.showMessageDialog(frame, "No time provided. \n Please enter a pomo time period.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
 }
