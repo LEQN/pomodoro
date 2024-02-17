@@ -126,10 +126,29 @@ public class PomodoroFrame{
         countPanel.setLayout(new GridBagLayout());
         //countdown display
         countdownLabel = new JLabel("00:00");
-        countdownLabel.setFont(new Font("Arial", Font.BOLD, 170));
+        countdownLabel.setFont(new Font("Arial", Font.BOLD, 190));
         countdownLabel.setForeground(new Color(1, 186, 239));
         countdownLabel.setOpaque(false);
-        countPanel.add(countdownLabel);
+        // layout placement
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 3;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(0,100, 50, 100);
+        countPanel.add(countdownLabel, gbc);
+
+        //session count display
+        JLabel sessionCount = new JLabel("Current session: ");
+        sessionCount.setFont(new Font("Arial", Font.BOLD, 20));
+        sessionCount.setForeground(new Color(1, 186, 239));
+        sessionCount.setOpaque(false);
+        //layout placement
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.PAGE_END;
+        gbc.insets = new Insets(35, 5, 35, 5);
+        countPanel.add(sessionCount, gbc);
         //continue button
         RoundedButton continueButton = new RoundedButton("Continue");
         continueButton.setPreferredSize(new Dimension(200, 50));
@@ -137,7 +156,11 @@ public class PomodoroFrame{
         continueButton.setForeground(Color.white);
         continueButton.setBackground(new Color(246, 174, 45));
         continueButton.setFocusable(false);
-        countPanel.add(continueButton);
+        // layout placement
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.ipadx = 20;
+        countPanel.add(continueButton, gbc);
         //pause button
         RoundedButton pauseButton = new RoundedButton("Pause");
         pauseButton.setPreferredSize(new Dimension(200, 50));
@@ -145,7 +168,10 @@ public class PomodoroFrame{
         pauseButton.setBackground(new Color(246, 174, 45));
         pauseButton.setForeground(Color.white);
         pauseButton.setFocusable(false);
-        countPanel.add(pauseButton);
+        // layout placement
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+        countPanel.add(pauseButton, gbc);
         //quit button
         RoundedButton quitButton = new RoundedButton("Quit");
         quitButton.setPreferredSize(new Dimension(200, 50));
@@ -153,7 +179,10 @@ public class PomodoroFrame{
         quitButton.setBackground(new Color(172, 57, 49));
         quitButton.setForeground(Color.white);
         quitButton.setFocusable(false);
-        countPanel.add(quitButton);
+        // layout placement
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        countPanel.add(quitButton, gbc);
 
         return countPanel;
     }
