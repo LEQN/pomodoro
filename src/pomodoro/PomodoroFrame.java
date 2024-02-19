@@ -3,10 +3,11 @@ package pomodoro;
 import javax.swing.*;
 import java.awt.*;
 
-public class PomodoroFrame{
+public class PomodoroFrame implements PomodoroListener{
     private JFrame frame = new JFrame();
     private JSpinner spinner; //sessions spinner
     private JTextField pomodoroTimeInput;//time input for pomo and rest
+    private PomodoroTimer countdown;
     private int pomodoroTime = 0;//pomo  time in seconds
     private int restTime = 0;//rest time in seconds
     private int sessions = 0;
@@ -160,6 +161,7 @@ public class PomodoroFrame{
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.ipadx = 20;
+        gbc.ipady = 20;
         countPanel.add(continueButton, gbc);
         //pause button
         RoundedButton pauseButton = new RoundedButton("Pause");
@@ -179,6 +181,7 @@ public class PomodoroFrame{
         quitButton.setBackground(new Color(172, 57, 49));
         quitButton.setForeground(Color.white);
         quitButton.setFocusable(false);
+        quitButton.addActionListener(e -> quitTimer());
         // layout placement
         gbc.gridx = 1;
         gbc.gridy = 2;
@@ -245,12 +248,29 @@ public class PomodoroFrame{
                 frame.revalidate();
                 frame.repaint();
                 //start the countdown
-                PomodoroTimer countdown = new PomodoroTimer(pomodoroTime, restTime, sessions);//make this a field
-                countdown.test();
+                countdown = new PomodoroTimer(this, pomodoroTime, restTime, sessions);//make this a field
+                countdown.start();
             }
         }else{
             JOptionPane.showMessageDialog(frame, "No time provided. \n Please enter a pomo time period.", "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    @Override
+    public void onSessionsEnd(){
+        // return to initial screen panel
+        frame.setContentPane(initialPanel());
+        frame.revalidate();
+        frame.repaint();
+    }
+
+
+    private void quitTimer(){
+        //quit countdown timer logic
+        countdown.endTimer();
+        countdown = null;
+        // return to initial screen panel
+        onSessionsEnd();
     }
 
 }
