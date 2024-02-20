@@ -11,7 +11,8 @@ public class PomodoroFrame implements PomodoroListener{
     private int pomodoroTime = 0;//pomo  time in seconds
     private int restTime = 0;//rest time in seconds
     private int sessions = 0;
-    public JLabel countdownLabel;
+    private JLabel countdownLabel;
+    private JLabel sessionCount;
     private RoundedButton startButton;
     private GridBagConstraints gbc = new GridBagConstraints();
 
@@ -139,7 +140,7 @@ public class PomodoroFrame implements PomodoroListener{
         countPanel.add(countdownLabel, gbc);
 
         //session count display
-        JLabel sessionCount = new JLabel("Current session: ");
+        sessionCount = new JLabel("Current session: ");
         sessionCount.setFont(new Font("Arial", Font.BOLD, 20));
         sessionCount.setForeground(new Color(1, 186, 239));
         sessionCount.setOpaque(false);
@@ -254,6 +255,16 @@ public class PomodoroFrame implements PomodoroListener{
         }else{
             JOptionPane.showMessageDialog(frame, "No time provided. \n Please enter a pomo time period.", "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    @Override
+    public void timeDisplayUpdate(int min, int sec){
+        countdownLabel.setText(String.format("%02d:%02d", min, sec));
+    }
+
+    @Override
+    public void sessionDisplayUpdate(int curSession){
+        sessionCount.setText(String.format("Sessions: %01d / %01d", curSession, sessions));
     }
 
     @Override

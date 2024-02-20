@@ -1,7 +1,5 @@
 package pomodoro;
 
-import javax.swing.*;
-import java.awt.event.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -10,6 +8,7 @@ public class PomodoroTimer {
     private int pomodoroTime; // in seconds
     private int restTime;     // in seconds
     private int sessions;
+    private int curSession;
     private Timer timer;
 
     public PomodoroTimer(PomodoroListener listener, int pomo, int rest, int sessions){
@@ -17,6 +16,7 @@ public class PomodoroTimer {
         this.pomodoroTime = pomo;
         this.restTime = rest;
         this.sessions = sessions;
+        this.curSession = sessions;
         this.timer = new Timer();
     }
 
@@ -26,11 +26,12 @@ public class PomodoroTimer {
 
     private void schedulePomo(){
         countDown(pomodoroTime, this::onPomoEnd);
+        listener.sessionDisplayUpdate((sessions - curSession)+1);
     }
 
     private void onPomoEnd(){
-        sessions--;
-        if (sessions>0){
+        curSession--;
+        if (curSession>0){
             countDown(restTime, this::schedulePomo);
         }else{
             listener.onSessionsEnd();
@@ -48,11 +49,17 @@ public class PomodoroTimer {
                         onEnd.run();
                     } else {
                         seconds--;
-                        System.out.println(seconds);
+                        timeToDisplay(seconds);
                     }
                 }
             };
             timer.scheduleAtFixedRate(count, 0, 1000);
+    }
+
+    private void timeToDisplay(int seconds){
+        int displayMinutes = seconds / 60;
+        int displaySeconds = seconds % 60;
+        listener.timeDisplayUpdate(displayMinutes, displaySeconds);
     }
 
     public void endTimer(){
