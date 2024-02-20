@@ -158,6 +158,7 @@ public class PomodoroFrame implements PomodoroListener{
         continueButton.setForeground(Color.white);
         continueButton.setBackground(new Color(246, 174, 45));
         continueButton.setFocusable(false);
+        continueButton.addActionListener(e -> countdown.continueTimer());
         // layout placement
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -171,6 +172,7 @@ public class PomodoroFrame implements PomodoroListener{
         pauseButton.setBackground(new Color(246, 174, 45));
         pauseButton.setForeground(Color.white);
         pauseButton.setFocusable(false);
+        pauseButton.addActionListener(e -> countdown.pauseTimer());
         // layout placement
         gbc.gridx = 2;
         gbc.gridy = 1;

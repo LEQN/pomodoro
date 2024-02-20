@@ -9,6 +9,7 @@ public class PomodoroTimer {
     private int restTime;     // in seconds
     private int sessions;
     private int curSession;
+    private boolean paused = false;
     private Timer timer;
 
     public PomodoroTimer(PomodoroListener listener, int pomo, int rest, int sessions){
@@ -44,12 +45,14 @@ public class PomodoroTimer {
                 int seconds = duration;
                 @Override
                 public void run() {
-                    if (seconds == 0) {
-                        this.cancel();
-                        onEnd.run();
-                    } else {
-                        seconds--;
-                        timeToDisplay(seconds);
+                    if (!paused) {
+                        if (seconds == 0) {
+                            this.cancel();
+                            onEnd.run();
+                        } else {
+                            seconds--;
+                            timeToDisplay(seconds);
+                        }
                     }
                 }
             };
@@ -60,6 +63,14 @@ public class PomodoroTimer {
         int displayMinutes = seconds / 60;
         int displaySeconds = seconds % 60;
         listener.timeDisplayUpdate(displayMinutes, displaySeconds);
+    }
+
+    public void pauseTimer(){
+        paused = true;
+    }
+
+    public void continueTimer(){
+        paused = false;
     }
 
     public void endTimer(){
