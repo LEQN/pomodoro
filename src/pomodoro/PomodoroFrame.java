@@ -152,19 +152,19 @@ public class PomodoroFrame implements PomodoroListener{
         gbc.insets = new Insets(35, 5, 35, 5);
         countPanel.add(sessionCount, gbc);
         //continue button
-        RoundedButton continueButton = new RoundedButton("Continue");
-        continueButton.setPreferredSize(new Dimension(200, 50));
-        continueButton.setFont(new Font("Arial", Font.BOLD, 20));
-        continueButton.setForeground(Color.white);
-        continueButton.setBackground(new Color(246, 174, 45));
-        continueButton.setFocusable(false);
-        continueButton.addActionListener(e -> countdown.continueTimer());
+        RoundedButton resumeButton = new RoundedButton("Resume");
+        resumeButton.setPreferredSize(new Dimension(200, 50));
+        resumeButton.setFont(new Font("Arial", Font.BOLD, 20));
+        resumeButton.setForeground(Color.white);
+        resumeButton.setBackground(new Color(246, 174, 45));
+        resumeButton.setFocusable(false);
+        resumeButton.addActionListener(e -> countdown.resumeTimer());
         // layout placement
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.ipadx = 20;
         gbc.ipady = 20;
-        countPanel.add(continueButton, gbc);
+        countPanel.add(resumeButton, gbc);
         //pause button
         RoundedButton pauseButton = new RoundedButton("Pause");
         pauseButton.setPreferredSize(new Dimension(200, 50));
