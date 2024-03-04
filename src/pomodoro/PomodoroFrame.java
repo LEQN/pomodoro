@@ -1,6 +1,7 @@
 package pomodoro;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class PomodoroFrame implements PomodoroListener{
@@ -29,6 +30,8 @@ public class PomodoroFrame implements PomodoroListener{
         frame.getContentPane().setBackground(new Color(11, 79, 108));
         // add start panel
         frame.add(initialPanel());
+        //add menu Bar
+        menuBar();
 
         frame.setVisible(true);
     }
@@ -284,6 +287,69 @@ public class PomodoroFrame implements PomodoroListener{
         countdown = null;
         // return to initial screen panel
         onSessionsEnd();
+    }
+
+    /**
+     * Menu bar, access to help and task notes.
+     */
+    private void menuBar(){
+        JMenuBar menu = new JMenuBar();
+        menu.setBackground(new Color(11, 79, 108));
+//        menu.setBorder(BorderFactory.createMatteBorder(0, 0, 2 ,0, new Color(1, 186, 239)));
+        menu.setBorder(BorderFactory.createMatteBorder(0, 0, 2 ,0, new Color(11, 79, 108)));
+        frame.setJMenuBar(menu);
+
+        // Task list
+        JMenu tasks = new JMenu("Tasks");
+        tasks.setBorder(new LineBorder(Color.white));
+        tasks.setForeground(Color.white);
+        tasks.setFont(new Font("Arial", Font.BOLD, 15));
+        JMenuItem taskList = new JMenuItem("Tasks List");
+        taskList.addActionListener(e -> taskListDisplay());
+        tasks.add(taskList);
+        menu.add(tasks);
+
+        // help, usage instructions
+        JMenu help = new JMenu("Help");
+        help.setBorder(new LineBorder(Color.white));
+//        help.setOpaque(true);
+        help.setFont(new Font("Arial", Font.BOLD, 15));
+        help.setForeground(Color.white);
+        menu.add(help);
+        JMenuItem useHelp = new JMenuItem("Get Started");
+        useHelp.addActionListener(e -> gettingStarted());
+        help.add(useHelp);
+        JMenuItem about = new JMenuItem("About");
+        about.addActionListener(e -> aboutDescription());
+        help.add(about);
+    }
+
+    /**
+     * Tasks list, multiple textboxes for user to input planned tasks and check them off.
+     */
+    public void taskListDisplay(){
+
+    }
+
+    public void gettingStarted(){
+        String text = """
+                Enter the desired length for your Pomodoro work period and click the pomo button.
+                Enter the desired rest period time and click the rest button, enter the number of sessions to be completed.
+                Click 'Start' to begin the timer.
+                Timers and countdowns will automatically start and end.
+                Use the 'Pause' button to pause the timer at any time, 
+                'Resume' to resume the timer, and 'Quit' to cancel timer and sessions.
+                """;
+        JOptionPane.showMessageDialog(frame, text, "Getting Started", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void aboutDescription(){
+        String text = """
+                Pomo:\n
+                Pomodoro timer created with Java.\n
+                Built in Feb 2024.
+                """;
+        JOptionPane.showMessageDialog(frame, text, "About", JOptionPane.INFORMATION_MESSAGE);
     }
 
 }
