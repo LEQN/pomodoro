@@ -5,10 +5,11 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class PomodoroFrame implements PomodoroListener{
-    private JFrame frame = new JFrame();
+    private JFrame frame;
     private JSpinner spinner; //sessions spinner
     private JTextField pomodoroTimeInput;//time input for pomo and rest
     private PomodoroTimer countdown;
+    private TaskList taskList;
     private int pomodoroTime = 0;//pomo  time in seconds
     private int restTime = 0;//rest time in seconds
     private int sessions = 0;
@@ -18,6 +19,7 @@ public class PomodoroFrame implements PomodoroListener{
     private GridBagConstraints gbc = new GridBagConstraints();
 
     public PomodoroFrame(){
+        frame = new JFrame();
         frame.setTitle("Pomo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(900, 700);
@@ -32,6 +34,8 @@ public class PomodoroFrame implements PomodoroListener{
         frame.add(initialPanel());
         //add menu Bar
         menuBar();
+        //initialise tasklist
+        taskList = new TaskList(frame.getWidth(), frame.getHeight());
 
         frame.setVisible(true);
     }
@@ -324,12 +328,6 @@ public class PomodoroFrame implements PomodoroListener{
         help.add(about);
     }
 
-    /**
-     * Tasks list, multiple textboxes for user to input planned tasks and check them off.
-     */
-    public void taskListDisplay(){
-
-    }
 
     public void gettingStarted(){
         String text = """
@@ -351,5 +349,15 @@ public class PomodoroFrame implements PomodoroListener{
                 """;
         JOptionPane.showMessageDialog(frame, text, "About", JOptionPane.INFORMATION_MESSAGE);
     }
+
+    /**
+     * Tasks list, multiple textboxes for user to input planned tasks and check them off.
+     */
+    public void taskListDisplay(){
+        frame.setContentPane(taskList.listPanel());
+        frame.revalidate();
+        frame.repaint();
+    }
+
 
 }
