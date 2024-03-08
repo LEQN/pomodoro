@@ -7,19 +7,17 @@ import java.awt.*;
 public class TaskList {
 
     private Dimension GUISize;
-    private Dimension bannerLabelSize;
-    private JComponent tasksPanel, taskComponentsPanel;
+    private JPanel tasksPanel, taskComponentsPanel;
     private Dimension tasksPanelSize;
+    private JPanel listPanel;
 
     public TaskList(int width, int height){
         GUISize = new Dimension(width, height);
-        bannerLabelSize = new Dimension(GUISize.width, 50);
         tasksPanelSize = new Dimension(GUISize.width-50, GUISize.height-200);
     }
 
-
     public JComponent listPanel(){
-        JPanel listPanel = new JPanel();
+        listPanel = new JPanel();
         listPanel.setLayout(new BorderLayout());
         listPanel.setBackground(new Color(11, 79, 108));
         //banner label
@@ -49,8 +47,18 @@ public class TaskList {
         addTaskButton.setForeground(Color.white);
         addTaskButton.setBackground(new Color(246, 174, 45));
         addTaskButton.setFont(new Font("Arial", Font.BOLD, 20));
+        addTaskButton.setFocusable(false);
+        addTaskButton.addActionListener(e -> createTask());
         listPanel.add(addTaskButton, BorderLayout.SOUTH);
         return listPanel;
+    }
+
+    public void createTask(){
+        TaskComponent taskComponent = new TaskComponent(taskComponentsPanel, tasksPanelSize);
+        taskComponentsPanel.add(taskComponent);
+        taskComponent.getTaskField().requestFocus();
+        listPanel.repaint();
+        listPanel.revalidate();
     }
 
 }
