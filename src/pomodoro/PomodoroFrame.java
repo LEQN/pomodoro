@@ -17,6 +17,7 @@ public class PomodoroFrame implements PomodoroListener{
     private JLabel sessionCount;
     private RoundedButton startButton;
     private GridBagConstraints gbc = new GridBagConstraints();
+    private JComponent prevPanel; //previous main panel, either initial or countdown
 
     public PomodoroFrame(){
         frame = new JFrame();
@@ -31,7 +32,7 @@ public class PomodoroFrame implements PomodoroListener{
 //        background color
         frame.getContentPane().setBackground(new Color(11, 79, 108));
         // add start panel
-        frame.add(initialPanel());
+        frame.add(prevPanel = initialPanel());
         //add menu Bar
         menuBar();
         //initialise tasklist
@@ -254,7 +255,7 @@ public class PomodoroFrame implements PomodoroListener{
                 JOptionPane.showMessageDialog(frame, "For multiple sessions you must have a rest period set.", "Error", JOptionPane.ERROR_MESSAGE);
             }else{
                 //swap initial input panel with the countdown display panel
-                frame.setContentPane(countDownDisplay());
+                frame.setContentPane(prevPanel = countDownDisplay());
                 frame.revalidate();
                 frame.repaint();
                 //start the countdown
@@ -279,7 +280,7 @@ public class PomodoroFrame implements PomodoroListener{
     @Override
     public void onSessionsEnd(){
         // return to initial screen panel
-        frame.setContentPane(initialPanel());
+        frame.setContentPane(prevPanel = initialPanel());
         frame.revalidate();
         frame.repaint();
     }
@@ -302,6 +303,16 @@ public class PomodoroFrame implements PomodoroListener{
 //        menu.setBorder(BorderFactory.createMatteBorder(0, 0, 2 ,0, new Color(1, 186, 239)));
         menu.setBorder(BorderFactory.createMatteBorder(0, 0, 2 ,0, new Color(11, 79, 108)));
         frame.setJMenuBar(menu);
+
+        //main panel/page pomo
+        JMenu homePomo = new JMenu("Main");
+        homePomo.setBorder(new LineBorder(Color.white));
+        homePomo.setFont(new Font("Arial", Font.BOLD, 15));
+        homePomo.setForeground(Color.white);
+        JMenuItem pomoPage = new JMenuItem("Main Pomo");
+        pomoPage.addActionListener(e -> returnMainPage());
+        homePomo.add(pomoPage);
+        menu.add(homePomo);
 
         // Task list
         JMenu tasks = new JMenu("Tasks");
@@ -359,5 +370,10 @@ public class PomodoroFrame implements PomodoroListener{
         frame.repaint();
     }
 
+    public void returnMainPage(){
+        frame.setContentPane(prevPanel);
+        frame.repaint();
+        frame.revalidate();
+    }
 
 }
