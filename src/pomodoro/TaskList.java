@@ -3,6 +3,8 @@ package pomodoro;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -120,6 +122,22 @@ public class TaskList {
             taskComponentsPanel.revalidate();
             taskComponentList.remove(task);
             saveContent();
+        });
+
+        //set focus listener to automatically save text input when losing focus of text pane
+        task.getTaskField().addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                int index = taskComponentList.indexOf(task);
+                if (index != -1){
+                    taskComponentList.set(index, task);
+                    saveContent();
+                }
+            }
         });
     }
 
